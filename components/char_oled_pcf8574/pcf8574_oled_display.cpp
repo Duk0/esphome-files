@@ -55,24 +55,19 @@ void PCF8574OLEDDisplay::send(uint8_t value, bool rs) {
 }
 // Poll the busy bit until it goes LOW
 void PCF8574OLEDDisplay::wait_for_ready() {
-/*
+  if (!wait_for_ready_) return;
+
   //unsigned char busy = 1;
   bool busy = true;
+  uint8_t attempts = 5;
   uint8_t data;
-  uint8_t attempts = 10;
   //uint8_t busy = 1;
-  //this->_busy_pin->setup();  // INPUT
-  //this->_busy_pin->pin_mode(gpio::FLAG_INPUT);
-  //this->rs_pin_->digital_write(false);
-  //this->rw_pin_->digital_write(true);
   //this->write_bytes(0x00, nullptr, 0);
   this->write_bytes(0x02, nullptr, 0); // 0x02 = rw
   //this->write(0x02, 1); // 0x02 = rw
  
   do
   {
-    //this->enable_pin_->digital_write(false);
-    //this->enable_pin_->digital_write(true);
     //this->write_bytes(0x02, nullptr, 0); // 0x02 = rw
     this->write_bytes(0x02 | 0x04 | 0x80, nullptr, 0); // 0x02 = rw, 0x04 = en, 0x80 = set read D7 - busy_pin
     //this->write(0x02 | 0x04, 1); // 0x02 = rw, 0x04 = en
@@ -89,16 +84,13 @@ void PCF8574OLEDDisplay::wait_for_ready() {
     //ESP_LOGI(TAG, "data: %#02x, busy: %d, attempts: %d", data, busy, attempts);
     //delayMicroseconds(1);
 
-    //this->enable_pin_->digital_write(false);
     this->write_bytes(0x02, nullptr, 0); // 0x02 = rw
     //this->write(0x02, 1); // 0x02 = rw
   	
   	// get remaining 4 bits, which are not used.
-    //this->enable_pin_->digital_write(true);
     this->write_bytes(0x02 | 0x04, nullptr, 0); // 0x02 = rw, 0x04 = en
     //this->write(0x02 | 0x04, 1); // 0x02 = rw, 0x04 = en
     delayMicroseconds(50);
-    //this->enable_pin_->digital_write(false);
     this->write_bytes(0x02, nullptr, 0); // 0x02 = rw
     //this->write(0x02, 1); // 0x02 = rw
     
@@ -107,11 +99,9 @@ void PCF8574OLEDDisplay::wait_for_ready() {
   }
   while(busy && attempts > 0);
   //while(busy);
-  
-  //this->_busy_pin->pin_mode(gpio::FLAG_OUTPUT);
-  //this->rw_pin_->digital_write(false);
+
   this->write_bytes(0x00, nullptr, 0);
-  //this->write(0x00, 1);*/
+  //this->write(0x00, 1);
 }
 
 }  // namespace char_oled_pcf8574

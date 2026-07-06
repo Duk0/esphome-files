@@ -3,6 +3,8 @@ import esphome.config_validation as cv
 from esphome.components import char_oled_base, i2c
 from esphome.const import CONF_ID, CONF_LAMBDA
 
+CONF_WAIT_FOR_READY = "wait_for_ready"
+
 DEPENDENCIES = ["i2c"]
 AUTO_LOAD = ["char_oled_base"]
 
@@ -14,6 +16,7 @@ PCF8574OLEDDisplay = char_oled_pcf8574_ns.class_(
 CONFIG_SCHEMA = char_oled_base.LCD_SCHEMA.extend(
     {
         cv.GenerateID(): cv.declare_id(PCF8574OLEDDisplay),
+        cv.Optional(CONF_WAIT_FOR_READY, default=False): cv.boolean,
     }
 ).extend(i2c.i2c_device_schema(0x3F))
 
@@ -30,3 +33,6 @@ async def to_code(config):
             return_type=cg.void,
         )
         cg.add(var.set_writer(lambda_))
+
+    if CONF_WAIT_FOR_READY in config:
+        cg.add(var.set_wait_for_ready(config[CONF_WAIT_FOR_READY]))

@@ -10,6 +10,7 @@ namespace char_oled_pcf8574 {
 class PCF8574OLEDDisplay : public char_oled_base::OLEDDisplay, public i2c::I2CDevice {
  public:
   void set_writer(std::function<void(PCF8574OLEDDisplay &)> &&writer) { this->writer_ = std::move(writer); }
+  void set_wait_for_ready(bool wait) { this->wait_for_ready_ = wait; }
   void setup() override;
   void dump_config() override;
 
@@ -22,6 +23,7 @@ class PCF8574OLEDDisplay : public char_oled_base::OLEDDisplay, public i2c::I2CDe
   void call_writer() override { this->writer_(*this); }
 
   std::function<void(PCF8574OLEDDisplay &)> writer_;
+  bool wait_for_ready_{false};
 };
 
 }  // namespace char_oled_pcf8574
