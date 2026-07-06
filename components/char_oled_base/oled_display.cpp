@@ -121,6 +121,8 @@ void OLEDDisplay::setup() {
 }
 
 float OLEDDisplay::get_setup_priority() const { return setup_priority::PROCESSOR; }
+//float OLEDDisplay::get_setup_priority() const { return setup_priority::BLUETOOTH; }
+//float OLEDDisplay::get_setup_priority() const { return setup_priority::AFTER_BLUETOOTH; }
 
 void HOT OLEDDisplay::display() {
   this->command_(LCD_DISPLAY_COMMAND_SET_DDRAM_ADDR | 0);
