@@ -1,7 +1,7 @@
 #include "tm1637.h"
-#include "esphome/core/log.h"
-#include "esphome/core/helpers.h"
 #include "esphome/core/hal.h"
+#include "esphome/core/helpers.h"
+#include "esphome/core/log.h"
 
 namespace esphome {
 namespace tm1637 {
@@ -127,8 +127,6 @@ const uint8_t TM1637_ASCII_TO_RAW[] PROGMEM = {
     0b01100011,           // '~', ord 0x7E (degree symbol)
 };
 void TM1637Display::setup() {
-  ESP_LOGCONFIG(TAG, "Setting up TM1637...");
-
   this->clk_pin_->setup();               // OUTPUT
   this->clk_pin_->digital_write(false);  // LOW
   this->dio_pin_->setup();               // OUTPUT
@@ -137,10 +135,12 @@ void TM1637Display::setup() {
   this->display();
 }
 void TM1637Display::dump_config() {
-  ESP_LOGCONFIG(TAG, "TM1637:");
-  ESP_LOGCONFIG(TAG, "  Intensity: %d", this->intensity_);
-  ESP_LOGCONFIG(TAG, "  Inverted: %d", this->inverted_);
-  ESP_LOGCONFIG(TAG, "  Length: %d", this->length_);
+  ESP_LOGCONFIG(TAG,
+                "TM1637:\n"
+                "  Intensity: %d\n"
+                "  Inverted: %d\n"
+                "  Length: %d",
+                this->intensity_, this->inverted_, this->length_);
   LOG_PIN("  CLK Pin: ", this->clk_pin_);
   LOG_PIN("  DIO Pin: ", this->dio_pin_);
   LOG_UPDATE_INTERVAL(this);
@@ -344,7 +344,7 @@ uint8_t TM1637Display::print(uint8_t start_pos, const char *str) {
              ((data & 0x2) ? 0x4 : 0) |               // F
              ((data & 0x1) ? 0x40 : 0);               // G
     } else {
-        // XABCDEFG > XGFEDCBA
+      // XABCDEFG > XGFEDCBA
       data = ((data & 0x80) ? 0x80 : 0) |  // no move X
              ((data & 0x40) ? 0x1 : 0) |   // A
              ((data & 0x20) ? 0x2 : 0) |   // B
