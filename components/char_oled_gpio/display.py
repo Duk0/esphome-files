@@ -11,6 +11,8 @@ from esphome.const import (
     CONF_LAMBDA,
 )
 
+CONF_WAIT_FOR_READY = "wait_for_ready"
+
 AUTO_LOAD = ["char_oled_base"]
 
 char_oled_gpio_ns = cg.esphome_ns.namespace("char_oled_gpio")
@@ -34,6 +36,7 @@ CONFIG_SCHEMA = char_oled_base.LCD_SCHEMA.extend(
         cv.Required(CONF_ENABLE_PIN): pins.gpio_output_pin_schema,
         cv.Required(CONF_RS_PIN): pins.gpio_output_pin_schema,
         cv.Required(CONF_RW_PIN): pins.gpio_output_pin_schema,
+        cv.Optional(CONF_WAIT_FOR_READY, default=False): cv.boolean,
     }
 )
 
@@ -62,3 +65,6 @@ async def to_code(config):
             return_type=cg.void,
         )
         cg.add(var.set_writer(lambda_))
+
+    if CONF_WAIT_FOR_READY in config:
+        cg.add(var.set_wait_for_ready(config[CONF_WAIT_FOR_READY]))

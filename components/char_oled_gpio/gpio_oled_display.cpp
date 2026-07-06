@@ -65,9 +65,11 @@ void GPIOOLEDDisplay::send(uint8_t value, bool rs) {
 }
 // Poll the busy bit until it goes LOW
 void GPIOOLEDDisplay::wait_for_ready() {
+  if (!wait_for_ready_) return;
+
   //unsigned char busy = 1;
   bool busy = true;
-  uint8_t attempts = 10;
+  uint8_t attempts = 5;
   this->_busy_pin->setup();  // INPUT
   this->_busy_pin->pin_mode(gpio::FLAG_INPUT);
   this->rs_pin_->digital_write(false);  

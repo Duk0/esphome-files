@@ -32,6 +32,7 @@ class GPIOOLEDDisplay : public char_oled_base::OLEDDisplay {
   void set_enable_pin(GPIOPin *enable) { this->enable_pin_ = enable; }
   void set_rs_pin(GPIOPin *rs) { this->rs_pin_ = rs; }
   void set_rw_pin(GPIOPin *rw) { this->rw_pin_ = rw; }
+  void set_wait_for_ready(bool wait) { this->wait_for_ready_ = wait; }
   void dump_config() override;
 
  protected:
@@ -48,6 +49,7 @@ class GPIOOLEDDisplay : public char_oled_base::OLEDDisplay {
   GPIOPin *_busy_pin{nullptr};
   GPIOPin *data_pins_[8]{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
   std::function<void(GPIOOLEDDisplay &)> writer_;
+  bool wait_for_ready_{false};
 };
 
 }  // namespace char_oled_gpio
